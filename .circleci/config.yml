@@ -1,0 +1,32 @@
+version: 2.1
+
+orbs:
+  heroku: circleci/heroku@1.2.3
+
+workflows:
+  heroku_deploy:
+    jobs:
+      - build
+      - heroku/deploy-via-git:
+          requires:
+            - build
+          filters:
+            branches:
+              only: main
+
+jobs:
+  build:
+    docker:
+      - image: 'cimg/node:14.15.1'
+    steps:
+      - checkout
+      - restore_cache:
+          key: v1-{{ checksum "client/package-lock.json"}}
+      - run: npm run build
+      - save_cache:
+          key: v1-{{ checksum "client/package-lock.json"}}
+          paths:
+            - client/node_modules
+      - run: nohup npm start --prefix client &
+      - run: sleep 3
+      - run: npm run test
