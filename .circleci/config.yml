@@ -18,6 +18,9 @@ jobs:
   build:
     docker:
       - image: 'cimg/node:14.15.1'
+        environment:
+          NODE_ENV: ci
+          REACT_APP_API_URI: $REACT_APP_API_URI
     steps:
       - checkout
       - restore_cache:
