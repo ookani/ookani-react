@@ -24,12 +24,10 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: v1-{{ checksum "client/package-lock.json"}}
-      - run: npm run build
+          key: v1-{{ checksum "package-lock.json"}}
+      - run: npm install
       - save_cache:
-          key: v1-{{ checksum "client/package-lock.json"}}
+          key: v1-{{ checksum "package-lock.json"}}
           paths:
-            - client/node_modules
-      - run: nohup npm start --prefix client &
-      - run: sleep 3
+            - node_modules
       - run: npm run test
