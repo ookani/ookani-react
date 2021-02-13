@@ -4,22 +4,20 @@ import {
   Button,
   CssBaseline,
   TextField,
-  Link,
-  Grid,
   Box,
   Typography,
   Container,
   CircularProgress,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import { LockOutlined } from '@material-ui/icons';
+import { AcUnit } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import Copyright from './Copyright';
 import { gql, useMutation } from '@apollo/client';
 
-const LOG_IN = gql`
-  mutation LogIn($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
+const SIGN_UP = gql`
+  mutation SignUp($email: String!, $password: String!) {
+    signup(email: $email, password: $password) {
       token
       user {
         id
@@ -49,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Login = (props) => {
+const Signup = (props) => {
   const classes = useStyles();
 
   const [formState, setFormState] = useState({
@@ -57,22 +55,22 @@ const Login = (props) => {
     password: '',
   });
 
-  const [login, { loading, error }] = useMutation(LOG_IN);
+  const [signup, { loading, error }] = useMutation(SIGN_UP);
 
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
-          <LockOutlined />
+          <AcUnit />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Welcome!
+          Create an account
         </Typography>
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            login({
+            signup({
               variables: {
                 email: formState.email,
                 password: formState.password,
@@ -89,7 +87,7 @@ const Login = (props) => {
             margin="normal"
             required
             fullWidth
-            id="login-email"
+            id="signup-email"
             label="Email Address"
             autoComplete="email"
             autoFocus
@@ -106,7 +104,7 @@ const Login = (props) => {
             margin="normal"
             required
             fullWidth
-            id="login-password"
+            id="signup-password"
             label="Password"
             type="password"
             autoComplete="current-password"
@@ -125,20 +123,8 @@ const Login = (props) => {
             color="primary"
             className={classes.submit}
           >
-            Log In
+            Sign Up
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
         </form>
         {loading && <CircularProgress />}
         {error && <Alert severity="error">{error.message}</Alert>}
@@ -150,4 +136,4 @@ const Login = (props) => {
   );
 };
 
-export default Login;
+export default Signup;
